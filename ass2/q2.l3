@@ -1,0 +1,79 @@
+(define empty?
+   (lambda (lst)
+      (eq? '() lst)
+  )
+)
+
+(define list?
+    (lambda (lst)
+       (if (empty? lst)
+            #t
+            (if (pair? lst)
+                (list? (cdr lst))
+                #f
+            )
+      )
+    )
+)
+
+
+(define equal-list?
+    (lambda (lst1 lst2)
+      (if (and (list? lst1) (list? lst2))
+         (if(and (empty? lst1) (empty? lst2))
+            #t
+            (if (or (empty? lst1) (empty? lst2))
+               #f
+               (if (eq? (car lst1) (car lst2))
+                  (equal-list? (cdr lst1) (cdr lst2))
+                  (if (and (list? (car lst1)) (list? (car lst2)))
+                     (equal-list? (car lst1) (car lst2))
+                     #f
+                  )
+               )
+            )
+         )
+         #f
+      )
+    )
+)
+
+
+(define append
+  (lambda (lst1 lst2)
+   (if (and (empty? lst1) (empty? lst2))
+      '()
+      (if (empty? lst1)
+         lst2
+         (cons (car lst1) (append (cdr lst1) lst2))
+      )
+   )
+  )
+)
+
+
+(define append3
+  (lambda (lst1 lst2 num)
+       (append (append lst1 lst2) (cons num '()))
+    )
+)
+
+
+(define pascal
+  (lambda (n)
+     (if (= n 1)
+         '(1)
+         (append3 '(1) (sublist (pascal (- n 1))) 1)
+     )
+  )
+)
+
+
+(define sublist
+   (lambda (lst)
+      (if (empty? (cdr lst))
+         '()
+         (cons (+ (car lst) (car (cdr lst))) (sublist (cdr lst)))
+      )
+   )
+)
